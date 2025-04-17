@@ -1,67 +1,84 @@
-# What-Drives-the-Price-of-a-Car?-
+# What Drives the Price of a Car?
 
 ## Used Car Price Prediction
 
-This project investigates the key factors that influence used car prices, using a dataset of over 370,000 vehicles. The goal is to support used car dealerships in making informed, data-driven pricing decisions by building a predictive model and uncovering meaningful patterns in the data.
+This project focuses on identifying the key factors that influence used car prices and building a machine learning model to support pricing decisions for used car dealerships. The dataset includes over 370,000 vehicle listings, and the analysis was structured using the CRISP-DM framework to ensure a methodical approach to solving the problem.
 
 ## Objective
 
-To identify the primary features that affect a used car's market price and build a machine learning model that can predict price with a high degree of accuracy.
+The goal was to determine which features most significantly impact used car prices and to develop a predictive model that can assist dealerships in setting competitive and data-driven prices.
 
 ## Methodology
 
-This project follows the CRISP-DM framework to guide each phase of analysis and modeling:
+The project followed the CRISP-DM process, which guided each stage of the workflow from business understanding to deployment.
 
 ### 1. Business Understanding
 
-We framed the problem from a dealership’s perspective: how can data be used to predict used car prices more accurately and consistently? The key objective was to support better pricing decisions that account for both vehicle condition and market behavior.
+The business goal was to help a used car dealership price its inventory more accurately based on historical data. The task was framed as a supervised regression problem, where the target variable was the car's listed price.
 
 ### 2. Data Understanding
 
-We explored a dataset containing listings for over 370,000 used vehicles. Through initial analysis, we discovered that variables like `price`, `odometer`, `year`, `condition`, and `manufacturer` had meaningful variation and appeared to be relevant for predicting outcomes. Outliers were identified in both the price and mileage distributions, and many columns contained missing or inconsistent data.
+Initial exploration of the dataset revealed that variables such as `price`, `odometer`, `year`, `condition`, and `manufacturer` appeared to be important in determining a vehicle’s value. There were also outliers and missing values in several columns that required further attention. A closer look showed that extreme price and mileage values could distort model performance if left untreated.
 
 ### 3. Data Preparation
 
-Several cleaning and transformation steps were applied to get the dataset ready for modeling:
+The dataset was cleaned and prepared with the following steps:
 
-- Removed irrelevant columns (e.g., `id`, `VIN`, `region`, `state`) that do not contribute to pricing.
-- Dropped rows with missing `price` or `year` values (critical to prediction).
-- Filled missing categorical values (e.g., `condition`, `fuel`, `paint_color`) with `"unknown"`.
-- Replaced missing `odometer` values with the **median**.
-- Removed price outliers (below $1,000 or above $100,000).
-- Filtered out vehicles with extreme mileage (over 300,000 miles).
-- Engineered a new `vehicle_age` feature from `2023 - year`.
-- Encoded categorical variables using `OneHotEncoder`.
-- Used `ColumnTransformer` to process numeric and categorical columns for modeling.
+- Dropped irrelevant columns like `id`, `VIN`, `region`, and `state` that do not contribute to price prediction.
+- Removed rows missing critical fields like `price` or `year`.
+- Replaced missing categorical fields (e.g., `fuel`, `condition`, `paint_color`) with `"unknown"`.
+- Filled missing `odometer` values using the median.
+- Filtered out vehicles with prices below $1,000 or above $100,000.
+- Limited `odometer` values to a maximum of 300,000 miles.
+- Created a new `vehicle_age` feature calculated as `2023 - year`.
+- Categorical features were encoded using `OneHotEncoder` within a `ColumnTransformer` to prepare the data for `scikit-learn` models.
 
 ### 4. Modeling
 
-We trained and evaluated two models:
-- `Linear Regression` (as a simple baseline)
-- `Random Forest Regressor` (non-linear model with tunable parameters)
+Two models were developed and compared:
 
-The dataset was split 80/20 into training and test sets. We used a pipeline to ensure all preprocessing steps were applied consistently during cross-validation and inference.
+- **Linear Regression** was used as a baseline model for simplicity and interpretability.
+- **Random Forest Regressor** was implemented to capture non-linear interactions and feature importance.
+
+The data was split into 80% training and 20% testing. Both models were wrapped in a pipeline with preprocessing steps to ensure consistent handling of features.
 
 ### 5. Evaluation
 
-The `Random Forest Regressor` clearly outperformed `Linear Regression`, achieving:
+The Random Forest model significantly outperformed the Linear Regression model:
 
-- **Root Mean Squared Error (RMSE):** ~5,769  
-- **Mean Absolute Error (MAE):** ~3,588  
-- **R² Score:** ~0.84  
+- **Random Forest**
+  - RMSE: ~5,769
+  - MAE: ~3,588
+  - R²: ~0.84
 
-The `Linear Regression` model showed a much weaker R² of ~0.59, indicating that it failed to capture the non-linear and interaction effects present in the data.
+- **Linear Regression**
+  - RMSE: ~9,225
+  - MAE: ~6,469
+  - R²: ~0.59
 
-These results highlight that Random Forest’s ability to model complex relationships makes it well-suited for this type of pricing task. The model’s strong performance indicates that key predictors like `odometer`, `vehicle age`, `condition`, and `manufacturer` are effective for estimating price.
+These results showed that the Random Forest model could explain a much larger proportion of the variance in car prices and was better at capturing the non-linear relationships among features. The most influential predictors included `odometer`, `vehicle age`, `condition`, and `manufacturer`.
 
 ### 6. Deployment
 
-The final model can now be deployed to assist used car dealerships in evaluating inventory and setting prices more accurately. Insights from the analysis—such as the importance of mileage and vehicle condition—can be used by dealers even without full model deployment. The model could be integrated into an internal tool, pricing dashboard, or inventory management system for real-time price recommendations.
+The final model is suitable for deployment in a dealership setting to provide pricing recommendations based on incoming vehicle data. It can be integrated into an inventory management system or used to flag inconsistencies in manual pricing decisions. The insights uncovered during the modeling phase also highlight which vehicle attributes should receive the most attention during appraisal and resale.
 
 ## Technologies Used
 
-- Python 3.x  
-- Jupyter Notebook  
-- Pandas, NumPy, scikit-learn, Seaborn, Matplotlib  
-- Machine learning models: `LinearRegression`, `RandomForestRegressor`  
-- Preprocessing tools: `Pipeline`, `OneHotEncoder`, `ColumnTransformer`
+- Python 3.x
+- Jupyter Notebook
+- Pandas, NumPy, Matplotlib, Seaborn
+- scikit-learn (for modeling and preprocessing)
+- RandomForestRegressor, LinearRegression, Pipeline, OneHotEncoder, ColumnTransformer
+
+## Key Insights
+
+- Higher mileage and older vehicles tend to sell for significantly less.
+- Vehicle `condition` and `manufacturer` are also strong indicators of price.
+- Tree-based models like Random Forest are well suited for this task, given the mix of categorical and numerical features.
+- Preprocessing steps such as handling missing values and encoding categories had a major impact on final model performance.
+
+## Future Work
+
+- Add more detailed geographic or regional information.
+- Experiment with advanced models like XGBoost or LightGBM.
+- Build a web-based interface or dashboard for pricing recommendations.
