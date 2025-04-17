@@ -1,6 +1,6 @@
 # What-Drives-the-Price-of-a-Car?-
 
-# Used Car Price Prediction
+## Used Car Price Prediction
 
 This project investigates the key factors that influence used car prices, using a dataset of over 370,000 vehicles. The goal is to support used car dealerships in making informed, data-driven pricing decisions by building a predictive model and uncovering meaningful patterns in the data.
 
